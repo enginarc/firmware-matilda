@@ -57,6 +57,8 @@ uint32_t exposure_get_timer(void);
  */
 exposure_state_t exposure_get_state(void);
 
+void exposure_reset();
+
 #ifdef __cplusplus
 }
 #endif

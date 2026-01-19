@@ -70,10 +70,10 @@ void app_main(void) {
 
 while (1) {
         
-        if (gpio_get_level(PIN_BUTTON_START) == 0) exposure_start();
-        if (gpio_get_level(PIN_BUTTON_PAUSE) == 0) exposure_pause();
-        if (gpio_get_level(PIN_BUTTON_STOP) == 0) exposure_stop(false);
-        if (gpio_get_level(PIN_BUTTON_RESET) == 0) exposure_reset();
+        if (gpio_get_level(PIN_BTN_START) == 0) exposure_start();
+        if (gpio_get_level(PIN_BTN_PAUSE) == 0) exposure_pause();
+        if (gpio_get_level(PIN_BTN_STOP) == 0) exposure_stop(false);
+        if (gpio_get_level(PIN_BTN_RESET) == 0) exposure_reset();
 
         vTaskDelay(pdMS_TO_TICKS(100));
     }
