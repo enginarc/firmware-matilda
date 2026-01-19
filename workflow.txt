@@ -1,11 +1,85 @@
-The workflow for UV Exposure box usage:
+Title: The workflow for UV Exposure box usage:
 
-1. Turn the unit on by using the AC on-off switch at the backside of the panel. The ESP32-S3 is now turned on.
-2. Display shows the last duration used by the user (property "last-duration" saved at NVS).
-3. User adjusts the exposure timer (in seconds) by using the <timer nob> (a EC11 rotary encoder) on the control panel. Display shows the updated timer values as the user turns the <timer nob> left / right.
-4. User presses the <start> button. The <fan> and <405nm leds> are powered by the <5volt relay>. Display shows the timer as it counts down to 0.
-5. User can pause the exposure by the pressing <pause/resume> button. This stops the <405 nm leds> and the countdown. Display shows "Paused". The user can resume the exposure by pressing the same button. The display shows the countdown.
-6. User can turn the <timer nob> left / right any time during exposure to increase or decrease the countdown timer (seconds).
-7. User can press the <stop> button to cancel the exposure. Display shows "Cancelled". 
-8. The timer countdown reaches to zero. The display shows "Finished". 
-9. User can press the <reset> button to reset the countimer timer to last duration (property "last-duration" saved at NVS)  used by the user.
+Exposure Apparatus:
+Control panel
+UV Lights
+Fan
+
+Exposure Control Panel:
+<Start/Pause/Adjust> nob is a EC11 Rotary Encoder with Switch. 
+<Cancel/Reset> button is a momentary push button switch. 
+
+Exposure States:
+    STATE_IDLE,      // Waiting for user to start
+    STATE_RUNNING,   // LEDs and Fan are ON, timer counting down
+    STATE_PAUSED,    // Countdown frozen, LEDs OFF, Fan remains ON
+    STATE_FINISHED,  // Countdown reached zero
+    STATE_CANCELLED  // User manually stopped the process
+
+Flow 1.
+While in State: n/a
+User Action: User turns the unit on by using the AC on-off switch at the backside of the panel.
+Expected Outcomes: 
+    ESP32-S3: System initialized.
+    UV Lights: Powered for 3 seconds. 
+    Fan: Powered for 3 seconds.
+    Display: Shows last exposure duration used by the user (property "last-duration" saved at NVS) when the user manually started the exposure by pressing the <Start/Pause/Adjust> nob.
+    Change to State: STATE_IDLE
+
+Flow 2.
+While in State: STATE_CANCELLED or STATE_IDLE or STATE_PAUSED or STATE_RUNNING
+User Action: User turns the <Start/Pause/Adjust> nob clockwise or counter clockwise to adjust the exposure timer (in 5 second intervals)
+Expected Outcomes: 
+    Countdown: apply state logic. 
+    Display: shows the updated timer values as the user turns the <Start/Pause/Adjust> nob clockwise or counter clockwise.
+    Change to State: no changes
+
+Flow 3.
+While in State: STATE_IDLE or STATE_PAUSED
+User Action: User presses down the <Start/Pause/Adjust> nob to start the exposure.
+Expected Outcomes:
+    Countdown: Resumes. 
+    UV Lights: Powered.
+    Fan: Powered.
+    Display: shows the timer as it counts down to 0.
+    Change to State: STATE_RUNNING
+
+Flow 4.
+While in State: STATE_RUNNING
+User Action: User presses down the <Start/Pause/Adjust> nob to pause the Exposure while it is running.
+Expected Outcomes: 
+    Countdown: Paused. 
+    UV Lights: Powered off.
+    Fan: Powered for 10 seconds.
+    Display: shows "Paused" text and the current countdown timer (time remaining).
+    Change to State: STATE_PAUSED
+
+Flow 5.
+While in State: STATE_RUNNING
+User Action: User presses the <Cancel/Reset> button to cancel the exposure while the exposure is running.
+Expected Outcomes: 
+    UV Lights: Powered off.
+    Fan: Powered off after 10 seconds.
+    Countdown: Stopped.
+    Display: shows "Cancelled" text and current countdown timer (time remaining).
+    Change to State: STATE_CANCELLED
+
+Flow 6.
+While in State: STATE_CANCELLED or STATE_FINISHED or STATE_IDLE or STATE_PAUSED
+User Action: User presses the <Cancel/Reset> button while the Exposure is not running
+Expected Outcomes: 
+    UV Lights: Powered off.
+    Fan: Powered off after 10 seconds.
+    Countdown: Reset to last duration (property "last-duration" saved at NVS) used by the user.
+    Display: show the current coundown timer.
+    Change to State: STATE_IDLE
+
+Flow 7.
+While State: STATE_RUNNING
+User Action: none
+Expected Outcome: 
+    UV Lights: Powered off.
+    Fan: Powered off after 10 seconds.
+    Countdown: Reaches to zero and stops. 
+    Display: shows "Finished" text and total duration of the exposure.
+    Change to State: STATE_FINISHED
