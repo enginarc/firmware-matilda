@@ -9,31 +9,31 @@
 
 static const char *TAG = "UV_BOX";
 
-void start_exposure_cycle(uint32_t duration_sec) {
-    ESP_LOGI(TAG, "Starting Cycle: Fan ON, Cooling stage...");
+// void start_exposure_cycle(uint32_t duration_sec) {
+//     ESP_LOGI(TAG, "Starting Cycle: Fan ON, Cooling stage...");
     
-    // 1. Pre-exposure: Turn on Fan for 2 seconds to stabilize airflow
-    gpio_set_level(PIN_RELAY_FAN, 0); // Active Low
-    vTaskDelay(pdMS_TO_TICKS(2000));
+//     // 1. Pre-exposure: Turn on Fan for 2 seconds to stabilize airflow
+//     gpio_set_level(PIN_RELAY_FAN, 0); // Active Low
+//     vTaskDelay(pdMS_TO_TICKS(2000));
 
-    // 2. Exposure: Turn on UV LEDs
-    ESP_LOGI(TAG, "Lamps Active for %lu seconds", duration_sec);
-    gpio_set_level(PIN_RELAY_LED, 0); // Active Low
-    gpio_set_level(PIN_STATUS_LED, 1); // Blue indicator ON
+//     // 2. Exposure: Turn on UV LEDs
+//     ESP_LOGI(TAG, "Lamps Active for %lu seconds", duration_sec);
+//     gpio_set_level(PIN_RELAY_LED, 0); // Active Low
+//     gpio_set_level(PIN_STATUS_LED, 1); // Blue indicator ON
 
-    vTaskDelay(pdMS_TO_TICKS(duration_sec * 1000));
+//     vTaskDelay(pdMS_TO_TICKS(duration_sec * 1000));
 
-    // 3. Finish: Turn off UV LEDs
-    gpio_set_level(PIN_RELAY_LED, 1);
-    gpio_set_level(PIN_STATUS_LED, 0);
-    ESP_LOGI(TAG, "Exposure Finished. Cooldown starting...");
+//     // 3. Finish: Turn off UV LEDs
+//     gpio_set_level(PIN_RELAY_LED, 1);
+//     gpio_set_level(PIN_STATUS_LED, 0);
+//     ESP_LOGI(TAG, "Exposure Finished. Cooldown starting...");
 
-    // 4. Cooldown: Keep fan running for 10 seconds to dump heat
-    vTaskDelay(pdMS_TO_TICKS(10000));
-    gpio_set_level(PIN_RELAY_FAN, 1);
+//     // 4. Cooldown: Keep fan running for 10 seconds to dump heat
+//     vTaskDelay(pdMS_TO_TICKS(10000));
+//     gpio_set_level(PIN_RELAY_FAN, 1);
     
-    ESP_LOGI(TAG, "Cycle Complete. System Ready.");
-}
+//     ESP_LOGI(TAG, "Cycle Complete. System Ready.");
+// }
 
 void app_main(void) {
     store_init();
@@ -69,10 +69,12 @@ void app_main(void) {
     ESP_LOGI(TAG, "UV Exposure Box Initialized (ESP32-S3 Super Mini)");
 
 while (1) {
-        // Simple polling for the button (In a full app, use interrupts or a task)
-        if (gpio_get_level(PIN_BUTTON_START) == 0) {
-            start_exposure_cycle(120); // Default 120 seconds
-        }
+        
+        if (gpio_get_level(PIN_BUTTON_START) == 0) exposure_start();
+        if (gpio_get_level(PIN_BUTTON_PAUSE) == 0) exposure_pause();
+        if (gpio_get_level(PIN_BUTTON_STOP) == 0) exposure_stop(false);
+        if (gpio_get_level(PIN_BUTTON_RESET) == 0) exposure_reset();
+
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
