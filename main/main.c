@@ -28,13 +28,13 @@ void app_main(void) {
         }
 
         // Flow 5 & 6: Cancel/Reset Button
-        if (gpio_get_level(PIN_BTN_STOP) == 0) {
+        if (gpio_get_level(PIN_BTN_CNCL_RST) == 0) {
             if (exposure_get_state() == STATE_RUNNING) {
                 exposure_stop(false); // Cancel
             } else {
                 exposure_reset();     // Reset to last-duration
             }
-            while(gpio_get_level(PIN_BTN_STOP) == 0) vTaskDelay(10); // Debounce
+            while(gpio_get_level(PIN_BTN_CNCL_RST) == 0) vTaskDelay(10); // Debounce
         }
 
         // Display Update Logic

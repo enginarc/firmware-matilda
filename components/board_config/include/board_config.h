@@ -32,10 +32,7 @@ extern "C" {
 #define PIN_ENC_B        (gpio_num_t)7
 #define PIN_ENC_SW       (gpio_num_t)15 // EC11 Push button (Timer Nob click)
 
-//#define PIN_BTN_START (gpio_num_t)5
-#define PIN_BTN_STOP   (gpio_num_t)16
-//#define PIN_BTN_PAUSE  (gpio_num_t)17
-//#define PIN_BTN_RESET  (gpio_num_t)18
+#define PIN_BTN_CNCL_RST   (gpio_num_t)16
 
 void board_init_gpio();
 

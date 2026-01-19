@@ -49,10 +49,7 @@ void board_init_gpio(void) {
     gpio_config_t io_conf_in = {};
     io_conf_in.intr_type = GPIO_INTR_DISABLE;
     io_conf_in.mode = GPIO_MODE_INPUT;
-    io_conf_in.pin_bit_mask = //(1ULL << PIN_BTN_START) | 
-                              // (1ULL << PIN_BTN_PAUSE) | 
-                               (1ULL << PIN_BTN_STOP)  | 
-                              // (1ULL << PIN_BTN_RESET) |
+    io_conf_in.pin_bit_mask = (1ULL << PIN_BTN_CNCL_RST)  | 
                                (1ULL << PIN_ENC_SW);
     io_conf_in.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf_in.pull_up_en = GPIO_PULLUP_ENABLE;
