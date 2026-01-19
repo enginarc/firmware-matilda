@@ -19,7 +19,7 @@ static void timer_callback(void* arg) {
 }
 
 void exposure_init() {
-    current_timer = store_get_u32("last-duration", 60);
+    current_timer = store_get_duration();
     
     const esp_timer_create_args_t timer_args = {
         .callback = &timer_callback,
@@ -34,7 +34,7 @@ void exposure_start() {
         current_state = STATE_RUNNING;
         gpio_set_level(PIN_RELAY_LED, 0); // Active Low
         gpio_set_level(PIN_RELAY_FAN, 0);
-        store_set_u32("last-duration", current_timer);
+        store_set_duration(current_timer);
     }
 }
 
@@ -42,6 +42,8 @@ void exposure_pause() {
     if (current_state == STATE_RUNNING) {
         current_state = STATE_PAUSED;
         gpio_set_level(PIN_RELAY_LED, 1); // LEDs OFF
+    } else if (current_state == STATE_PAUSED) {
+        exposure_start(); // Resume
     }
 }
 
@@ -56,6 +58,11 @@ void exposure_adjust(int delta) {
     if ((int)current_timer + delta >= 0) {
         current_timer += delta;
     }
+}
+
+void exposure_reset() {
+    current_state = STATE_IDLE;
+    current_timer = store_get_duration();
 }
 
 uint32_t exposure_get_timer() { return current_timer; }

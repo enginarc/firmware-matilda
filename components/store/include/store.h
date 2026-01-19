@@ -28,6 +28,9 @@ uint32_t store_get_u32(const char* key, uint32_t default_val);
  */
 void store_set_u32(const char* key, uint32_t value);
 
+uint32_t store_get_duration();
+void store_set_duration(uint32_t val) ;
+
 #ifdef __cplusplus
 }
 #endif
