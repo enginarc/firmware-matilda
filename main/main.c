@@ -3,6 +3,8 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "board_config.h"
+#include "store.h"
+#include "exposure.h"
 #include "display.h"
 
 static const char *TAG = "UV_BOX";
@@ -34,6 +36,7 @@ void start_exposure_cycle(uint32_t duration_sec) {
 }
 
 void app_main(void) {
+    store_init();
     // 1. Hardware Init
     board_init_gpio();
     
@@ -42,6 +45,8 @@ void app_main(void) {
         ESP_LOGE(TAG, "Display initialization failed!");
         return;
     }
+
+    exposure_init();
 
     // 3. Initial UI Setup
     display_lock();

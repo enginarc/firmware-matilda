@@ -29,6 +29,14 @@ extern "C" {
 #define PIN_BUZZER       (gpio_num_t)3
 #define PIN_STATUS_LED   (gpio_num_t)8 // Onboard Blue LED
 
+#define PIN_ENC_A        (gpio_num_t)6
+#define PIN_ENC_B        (gpio_num_t)7
+#define PIN_ENC_SW       (gpio_num_t)15 // EC11 Push button (Timer Nob click)
+
+#define PIN_BUTTON_STOP   (gpio_num_t)16
+#define PIN_BUTTON_PAUSE  (gpio_num_t)17
+#define PIN_BUTTON_RESET  (gpio_num_t)18
+
 void board_init_gpio();
 
 #ifdef __cplusplus
