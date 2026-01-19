@@ -1,0 +1,11 @@
+The workflow for UV Exposure box usage:
+
+1. Turn the unit on by using the AC on-off switch at the backside of the panel. The ESP32-S3 is now turned on.
+2. Display shows the last duration used by the user (property "last-duration" saved at NVS).
+3. User adjusts the exposure timer (in seconds) by using the <timer nob> (a EC11 rotary encoder) on the control panel. Display shows the updated timer values as the user turns the <timer nob> left / right.
+4. User presses the <start> button. The <fan> and <405nm leds> are powered by the <5volt relay>. Display shows the timer as it counts down to 0.
+5. User can pause the exposure by the pressing <pause/resume> button. This stops the <405 nm leds> and the countdown. Display shows "Paused". The user can resume the exposure by pressing the same button. The display shows the countdown.
+6. User can turn the <timer nob> left / right any time during exposure to increase or decrease the countdown timer (seconds).
+7. User can press the <stop> button to cancel the exposure. Display shows "Cancelled". 
+8. The timer countdown reaches to zero. The display shows "Finished". 
+9. User can press the <reset> button to reset the countimer timer to last duration (property "last-duration" saved at NVS)  used by the user.
