@@ -10,14 +10,13 @@ static void IRAM_ATTR encoder_isr_handler(void* arg) {
     static int last_level_a = -1;
     int current_level_a = gpio_get_level(PIN_ENC_A);
     
-    // Simple state machine for EC11 rotation detection
     if (current_level_a != last_level_a) {
         last_level_a = current_level_a;
-        if (current_level_a == 0) { // Falling edge on A
+        if (current_level_a == 0) { // Falling edge
             if (gpio_get_level(PIN_ENC_B) == 0) {
-                exposure_adjust(-1);
+                exposure_adjust(-5); // 5 second intervals (Flow 2)
             } else {
-                exposure_adjust(1);
+                exposure_adjust(5);  // 5 second intervals (Flow 2)
             }
         }
     }
@@ -50,10 +49,10 @@ void board_init_gpio(void) {
     gpio_config_t io_conf_in = {};
     io_conf_in.intr_type = GPIO_INTR_DISABLE;
     io_conf_in.mode = GPIO_MODE_INPUT;
-    io_conf_in.pin_bit_mask = (1ULL << PIN_BTN_START) | 
-                               (1ULL << PIN_BTN_PAUSE) | 
+    io_conf_in.pin_bit_mask = //(1ULL << PIN_BTN_START) | 
+                              // (1ULL << PIN_BTN_PAUSE) | 
                                (1ULL << PIN_BTN_STOP)  | 
-                               (1ULL << PIN_BTN_RESET) |
+                              // (1ULL << PIN_BTN_RESET) |
                                (1ULL << PIN_ENC_SW);
     io_conf_in.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf_in.pull_up_en = GPIO_PULLUP_ENABLE;
