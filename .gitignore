@@ -5,3 +5,11 @@ managed_components/
 dependencies.lock
 .DS_Store
 .vscode/
+
+*-cache
+*-backups
+*.lck
+_autosave*
+.idea/
+*.swp
+__pycache__/
