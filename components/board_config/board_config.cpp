@@ -29,7 +29,6 @@ void board_init_gpio(void) {
     io_conf_out.mode = GPIO_MODE_OUTPUT;
     io_conf_out.pin_bit_mask = (1ULL << PIN_RELAY_LED) | 
                                (1ULL << PIN_RELAY_FAN) | 
-                               (1ULL << PIN_STATUS_LED)|
                                (1ULL << PIN_BUZZER);
     io_conf_out.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf_out.pull_up_en = GPIO_PULLUP_DISABLE;
@@ -38,7 +37,6 @@ void board_init_gpio(void) {
     // Initial State: Turn OFF relays (High) and LEDs/Buzzer (Low)
     gpio_set_level(PIN_RELAY_LED, 1);
     gpio_set_level(PIN_RELAY_FAN, 1);
-    gpio_set_level(PIN_STATUS_LED, 0);
     gpio_set_level(PIN_BUZZER, 0);
 
     // 2. Configure LCD Backlight

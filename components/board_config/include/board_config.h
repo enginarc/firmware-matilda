@@ -14,25 +14,24 @@ extern "C" {
 #define PIN_LCD_RST (gpio_num_t)10
 #define PIN_LCD_DC  (gpio_num_t)9
 #define PIN_LCD_CS       -1             // Tied to GND on most Super Mini modules
-#define PIN_LCD_BL  (gpio_num_t)1  // PWM capable
+#define PIN_LCD_BL  (gpio_num_t)8  // PWM capable
 
 #define LCD_H_RES        240
 #define LCD_V_RES        320
 #define LCD_PIXEL_CLOCK  (40 * 1000 * 1000) // 40MHz
 
 // --- Relays (2-Channel Module) ---
+#define PIN_RELAY_FAN (gpio_num_t)1  // Relay 2: Cooling Fan
 #define PIN_RELAY_LED (gpio_num_t)2  // Relay 1: UV LEDs
-#define PIN_RELAY_FAN (gpio_num_t)4  // Relay 2: Cooling Fan
 
 // --- Input & Feedback ---
 #define PIN_BUZZER       (gpio_num_t)3
-#define PIN_STATUS_LED   (gpio_num_t)8 // Onboard Blue LED
 
+#define PIN_BTN_CNCL_RST   (gpio_num_t)4
+
+#define PIN_ENC_SW       (gpio_num_t)5 // EC11 Push button (Timer Nob click)
 #define PIN_ENC_A        (gpio_num_t)6
 #define PIN_ENC_B        (gpio_num_t)7
-#define PIN_ENC_SW       (gpio_num_t)15 // EC11 Push button (Timer Nob click)
-
-#define PIN_BTN_CNCL_RST   (gpio_num_t)16
 
 void board_init_gpio();
 
