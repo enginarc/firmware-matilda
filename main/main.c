@@ -1,56 +1,45 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_log.h"
+#include "driver/gpio.h"
 #include "board_config.h"
+#include "display.h"
 #include "store.h"
 #include "exposure.h"
-#include "display.h"
-
-static const char *TAG = "MATILDA";
-
 
 void app_main(void) {
+    // Initialize system components
     store_init();
     board_init_gpio();
     display_init();
     exposure_init();
 
     while (1) {
-        // Flow 3 & 4: Start/Pause Knob Click
+        // Toggle Start/Pause using the Thumbwheel click (PIN_TWT_SW)
         if (gpio_get_level(PIN_TWT_SW) == 0) {
             if (exposure_get_state() == STATE_RUNNING) {
                 exposure_pause();
             } else {
                 exposure_start();
             }
-            while(gpio_get_level(PIN_TWT_SW) == 0) vTaskDelay(10); // Debounce
+            // Debounce: wait for release
+            while(gpio_get_level(PIN_TWT_SW) == 0) vTaskDelay(pdMS_TO_TICKS(10));
         }
 
-        // Flow 5 & 6: Cancel/Reset Button
+        // Cancel or Reset using the dedicated button (PIN_BTN_CNCL_RST)
         if (gpio_get_level(PIN_BTN_CNCL_RST) == 0) {
             if (exposure_get_state() == STATE_RUNNING) {
-                exposure_stop(false); // Cancel
+                exposure_stop(false); // Cancel active exposure
             } else {
-                exposure_reset();     // Reset to last-duration
+                exposure_reset();     // Reset timer to last-used duration
             }
-            while(gpio_get_level(PIN_BTN_CNCL_RST) == 0) vTaskDelay(10); // Debounce
+            // Debounce: wait for release
+            while(gpio_get_level(PIN_BTN_CNCL_RST) == 0) vTaskDelay(pdMS_TO_TICKS(10));
         }
 
-        // Display Update Logic
+        // Periodically refresh the display (logic handled in display component)
         display_lock();
-        exposure_state_t state = exposure_get_state();
-        uint32_t timer = exposure_get_timer();
-        
-        // Update your LVGL labels here:
-        // switch(state) {
-        //    case STATE_PAUSED: lv_label_set_text(lbl_status, "Paused"); break;
-        //    case STATE_FINISHED: lv_label_set_text(lbl_status, "Finished"); break;
-        //    case STATE_CANCELLED: lv_label_set_text(lbl_status, "Cancelled"); break;
-        //    default: lv_label_set_text(lbl_status, "");
-        // }
-        // lv_label_set_text_fmt(lbl_timer, "%02lu:%02lu", timer/60, timer%60);
-        
+        // UI rendering logic here
         display_unlock();
 
         vTaskDelay(pdMS_TO_TICKS(100));
