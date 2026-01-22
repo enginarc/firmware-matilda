@@ -18,13 +18,13 @@ void app_main(void) {
 
     while (1) {
         // Flow 3 & 4: Start/Pause Knob Click
-        if (gpio_get_level(PIN_ENC_SW) == 0) {
+        if (gpio_get_level(PIN_TWT_SW) == 0) {
             if (exposure_get_state() == STATE_RUNNING) {
                 exposure_pause();
             } else {
                 exposure_start();
             }
-            while(gpio_get_level(PIN_ENC_SW) == 0) vTaskDelay(10); // Debounce
+            while(gpio_get_level(PIN_TWT_SW) == 0) vTaskDelay(10); // Debounce
         }
 
         // Flow 5 & 6: Cancel/Reset Button
