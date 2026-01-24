@@ -13,3 +13,4 @@ _autosave*
 .idea/
 *.swp
 __pycache__/
+hardware/*.svg

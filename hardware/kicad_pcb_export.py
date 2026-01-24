@@ -128,7 +128,7 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
     print(f"\n✅ Production File Created: {output_path}")
 
     if should_print and platform.system() == "Darwin":
-        subprocess.run(["open", "-a", "Preview", output_path])
+        subprocess.run(["open", "-a", "GIMP", output_path])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="KiCad Fabricator: Clean Composition Workflow")
