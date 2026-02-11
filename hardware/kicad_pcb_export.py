@@ -78,15 +78,19 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
 
     Vgap_px = sg.Unit(f"{gap_mm}mm").to('px').value
     Hgap_px = sg.Unit(f"{gap_mm}mm").to('px').value
+    LabelVgap_px = sg.Unit("10mm").to('px').value
+
+
 
     OutputSVG_width_px = max(svg_fcu.width, svg_bcu.width)
     if double_mode:
         OutputSVG_width_px *= 2
         OutputSVG_width_px += Hgap_px
 
-    OutputSVG_height_px = svg_fcu.height + svg_bcu.height + (3*Vgap_px)
+    OutputSVG_height_px = svg_fcu.height + svg_bcu.height + Vgap_px + LabelVgap_px
+
     Bcu_Vpos_px = svg_fcu.height + Vgap_px
-    Label_Vpos_px = Bcu_Vpos_px + svg_bcu.height + Vgap_px
+    Label_Vpos_px = Bcu_Vpos_px + svg_bcu.height + LabelVgap_px
 
     print(f"F.cu: {sg.Unit(svg_fcu.width).to('mm')} x {sg.Unit(svg_fcu.height).to('mm')} \r\nB.cu: {sg.Unit(svg_bcu.width).to('mm')} x {sg.Unit(svg_bcu.height).to('mm')}")
 
@@ -124,6 +128,7 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
         *OutputSVG__params,
      ).save(output_path)
 
+    print(f"\nRemoving temporary files...")
     os.remove(temp_f); os.remove(temp_b)
     print(f"\n✅ Production File Created: {output_path}")
 
