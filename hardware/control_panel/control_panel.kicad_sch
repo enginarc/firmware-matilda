@@ -2291,12 +2291,6 @@
 		)
 	)
 	(junction
-		(at 69.85 101.6)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "85dd5875-012d-4cf3-ae0f-ec023018a891")
-	)
-	(junction
 		(at 148.59 80.01)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2313,16 +2307,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "aa26c09d-1343-4c12-8738-83c9c7ae43b3")
-	)
-	(wire
-		(pts
-			(xy 69.85 93.98) (xy 77.47 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0006834a-9d90-4dbf-98be-49ae4373d964")
 	)
 	(wire
 		(pts
@@ -2406,16 +2390,6 @@
 	)
 	(wire
 		(pts
-			(xy 90.17 93.98) (xy 90.17 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1755416a-359e-4719-86f7-e562e07d7b38")
-	)
-	(wire
-		(pts
 			(xy 128.27 132.08) (xy 162.56 132.08)
 		)
 		(stroke
@@ -2423,16 +2397,6 @@
 			(type default)
 		)
 		(uuid "1bccad45-f41f-4b49-b2e7-5fa968642a06")
-	)
-	(wire
-		(pts
-			(xy 69.85 93.98) (xy 69.85 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1c5d049e-f138-4d35-9f3c-0e9b24410698")
 	)
 	(wire
 		(pts
@@ -2563,16 +2527,6 @@
 			(type default)
 		)
 		(uuid "4c37f6d7-cd44-45b6-aaa1-9734100c7729")
-	)
-	(wire
-		(pts
-			(xy 87.63 93.98) (xy 90.17 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4d2577fe-2fe8-4189-a4ec-f9b6f1108f19")
 	)
 	(wire
 		(pts
@@ -2763,16 +2717,6 @@
 			(type default)
 		)
 		(uuid "af6faeb4-e2e3-4dbb-83ab-3bb7178453f3")
-	)
-	(wire
-		(pts
-			(xy 90.17 120.65) (xy 102.87 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bf62deb3-c34e-4425-9d25-69bdc3b69783")
 	)
 	(wire
 		(pts
@@ -3024,16 +2968,6 @@
 		)
 		(uuid "59d4ceca-3b52-4884-9681-dcc044dc6a44")
 	)
-	(label "RESERVED"
-		(at 91.44 120.65 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "5eb1aadb-2b9c-4d97-bea2-c0e6a3de2796")
-	)
 	(label "BUZZER"
 		(at 130.81 124.46 0)
 		(effects
@@ -3143,74 +3077,6 @@
 			(justify left bottom)
 		)
 		(uuid "fb7a9083-1bb6-417d-8c20-6592d773ae80")
-	)
-	(symbol
-		(lib_id "Switch:SW_Push")
-		(at 82.55 93.98 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "03854532-8ae9-448b-91ac-18b44fd43888")
-		(property "Reference" "SW_RESERVED1"
-			(at 82.55 86.36 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SW_Push"
-			(at 82.55 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm_H8.5mm"
-			(at 82.55 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 82.55 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Push button switch, generic, two pins"
-			(at 82.55 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5d1a5e16-4f1f-460a-882d-db742243ddd1")
-		)
-		(pin "2"
-			(uuid "9937d98a-e11f-46e1-a776-01ce4c631b0e")
-		)
-		(instances
-			(project ""
-				(path "/59452313-4d2e-433c-bd3a-a836d98d9b68"
-					(reference "SW_RESERVED1")
-					(unit 1)
-				)
-			)
-		)
 	)
 	(symbol
 		(lib_id "Connector:Conn_01x02_Socket")

@@ -90,12 +90,12 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
     OutputSVG_height_px = svg_fcu.height + svg_bcu.height + Vgap_px + LabelVgap_px
 
     Bcu_Vpos_px = svg_fcu.height + Vgap_px
-    Label_Vpos_px = Bcu_Vpos_px + svg_bcu.height + LabelVgap_px
+    Label_Vpos_px = Bcu_Vpos_px + svg_bcu.height + LabelVgap_px - 5
 
     print(f"F.cu: {sg.Unit(svg_fcu.width).to('mm')} x {sg.Unit(svg_fcu.height).to('mm')} \r\nB.cu: {sg.Unit(svg_bcu.width).to('mm')} x {sg.Unit(svg_bcu.height).to('mm')}")
 
     # Label & Metadata
-    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    ts = datetime.datetime.now().strftime("%b/%d %H:%M")
     svg_label_text = f"File: {os.path.basename(output_path)} | Scale: {scale}:1 | Date: {ts}"
     svg_label = sg.Text(svg_label_text, 
                         sg.Unit(OutputSVG_width_px).to('mm').value, 
