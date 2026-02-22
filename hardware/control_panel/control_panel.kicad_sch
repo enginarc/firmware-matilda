@@ -2465,16 +2465,6 @@
 		)
 		(uuid "0c17e24a-3007-43bc-845d-edb70e2af0b7")
 	)
-	(label "LCD_SCL"
-		(at 161.29 129.54 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "0e83f1e9-3622-41e0-8b2f-af87c1249e46")
-	)
 	(label "LCD_RST"
 		(at 161.29 132.08 0)
 		(effects
@@ -2555,8 +2545,18 @@
 		)
 		(uuid "7c12d7f2-740b-4727-85fd-c50dbfb60d9a")
 	)
-	(label "LCD_SDA"
+	(label "LCD_SCL"
 		(at 161.29 127 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "81e72714-8ae4-42d5-8118-01065ab27a66")
+	)
+	(label "LCD_SDA"
+		(at 161.29 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)

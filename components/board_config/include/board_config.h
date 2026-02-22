@@ -9,8 +9,8 @@ extern "C" {
 
 // --- ST7789 Display (Hardware SPI) ---
 #define LCD_HOST    SPI2_HOST
-#define PIN_LCD_SCLK (gpio_num_t)12
-#define PIN_LCD_MOSI (gpio_num_t)13
+#define PIN_LCD_SCLK (gpio_num_t)13
+#define PIN_LCD_MOSI (gpio_num_t)12
 #define PIN_LCD_RST (gpio_num_t)11
 #define PIN_LCD_DC  (gpio_num_t)10
 #define PIN_LCD_CS       -1             // Tied to GND on most Super Mini modules
