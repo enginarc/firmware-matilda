@@ -21,12 +21,12 @@ extern "C" {
 #define LCD_PIXEL_CLOCK  (40 * 1000 * 1000) // 40MHz
 
 // --- Relays (2-Channel Module) ---
-#define PIN_RELAY_FAN (gpio_num_t)11  // Relay 2: Cooling Fan
-#define PIN_RELAY_LED (gpio_num_t)12  // Relay 1: UV LEDs
+#define PIN_RELAY_FAN (gpio_num_t)12  // Relay 2: Cooling Fan
+#define PIN_RELAY_LED (gpio_num_t)13  // Relay 1: UV LEDs
 
 // --- Input & Feedback ---
-#define PIN_BUZZER       (gpio_num_t)13
-#define PIN_RESERVED     (gpio_num_t)1
+#define PIN_BUZZER       (gpio_num_t)1
+#define PIN_RESERVED     (gpio_num_t)11
 
 #define PIN_BTN_CNCL_RST   (gpio_num_t)2
 
