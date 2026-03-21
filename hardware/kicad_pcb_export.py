@@ -22,7 +22,7 @@ def get_input_interactively(arg_value, description):
         arg_value += ".svg"
     return arg_value
 
-def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm, double_mode, cal_x, cal_y, verbose, positive, layer):
+def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm, copies, cal_x, cal_y, verbose, positive, layer):
     cwd = os.getcwd()
     
     clean_project = project_name if project_name.endswith(".kicad_pcb") else f"{project_name}.kicad_pcb"
@@ -91,27 +91,23 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
     b_width = svg_bcu.width if svg_bcu else 0
     b_height = svg_bcu.height if svg_bcu else 0
 
+    # Vertical stack logic
     OutputSVG_width_px = max(f_width, b_width)
-    if double_mode:
-        OutputSVG_width_px *= 2
-        OutputSVG_width_px += Hgap_px
 
     v_gap_px = Vgap_px if do_fcu and do_bcu else 0
-    OutputSVG_height_px = f_height + b_height + v_gap_px + LabelVgap_px
+    block_height_px = f_height + b_height + v_gap_px
+    
+    total_height_px = (block_height_px * copies) + (Vgap_px * (copies - 1))
+    OutputSVG_height_px = total_height_px + LabelVgap_px
 
-    bcu_y_pos_px = f_height + v_gap_px
+    Label_Vpos_px = total_height_px + LabelVgap_px - 5
 
     if do_fcu and do_bcu:
-        Label_Vpos_px = bcu_y_pos_px + b_height + LabelVgap_px - 5
         print(f"F.cu: {sg.Unit(f_width).to('mm')} x {sg.Unit(f_height).to('mm')} \r\nB.cu: {sg.Unit(b_width).to('mm')} x {sg.Unit(b_height).to('mm')}")
     elif do_fcu:
-        Label_Vpos_px = f_height + LabelVgap_px - 5
         print(f"F.cu: {sg.Unit(f_width).to('mm')} x {sg.Unit(f_height).to('mm')}")
     elif do_bcu:
-        Label_Vpos_px = b_height + LabelVgap_px - 5
         print(f"B.cu: {sg.Unit(b_width).to('mm')} x {sg.Unit(b_height).to('mm')}")
-    else: # no layers
-        Label_Vpos_px = LabelVgap_px - 5
 
     # Label & Metadata
     ts = datetime.datetime.now().strftime("%b/%d %H:%M")
@@ -123,18 +119,21 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
 
     OutputSVG__params = []
 
-    if double_mode:
-        OutputSVG_col2_pos_px = max(f_width, b_width) + Hgap_px
+    for i in range(copies):
+        y_offset = i * (block_height_px + Vgap_px)
+        
         if do_fcu:
-            OutputSVG__params.extend([svg_fcu, sg.Element(svg_fcu.copy()).move(sg.Unit(OutputSVG_col2_pos_px).to('mm').value, 0)])
+            elem = sg.Element(svg_fcu.copy())
+            elem.move(0, sg.Unit(y_offset).to('mm').value)
+            OutputSVG__params.append(elem)
+            
         if do_bcu:
-            moved_bcu = svg_bcu.move(0, sg.Unit(bcu_y_pos_px).to('mm').value)
-            OutputSVG__params.extend([moved_bcu, sg.Element(moved_bcu.copy()).move(sg.Unit(OutputSVG_col2_pos_px).to('mm').value, 0)])
-        if do_fcu or do_bcu: OutputSVG__params.append(svg_label)
-    else:
-        if do_fcu: OutputSVG__params.append(svg_fcu)
-        if do_bcu: OutputSVG__params.append(svg_bcu.move(0, sg.Unit(bcu_y_pos_px).to('mm').value))
-        if do_fcu or do_bcu: OutputSVG__params.append(svg_label)
+            elem = sg.Element(svg_bcu.copy())
+            local_y = (f_height + v_gap_px) if do_fcu else 0
+            elem.move(0, sg.Unit(y_offset + local_y).to('mm').value)
+            OutputSVG__params.append(elem)
+            
+    if do_fcu or do_bcu: OutputSVG__params.append(svg_label)
 
 
     sg.Figure(
@@ -161,7 +160,7 @@ if __name__ == "__main__":
     parser.add_argument("--print", action="store_true")
     parser.add_argument("--gap",type=float,default=10)
     #parser.add_argument("--a4", action="store_true")
-    parser.add_argument("--double", action="store_true")
+    parser.add_argument("--copies", type=int, default=1, help="Number of vertical copies")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--positive", action="store_true")
     parser.add_argument("--layer", type=str, default="F.Cu,B.Cu")
@@ -175,4 +174,4 @@ if __name__ == "__main__":
     proj = get_input_interactively(args.project, "Project Name (.kicad_pcb)")
     out = get_input_interactively(args.output, "Output Filename")
     
-    export_and_stitch(proj, out, args.scale, args.print, args.gap, args.double, args.cal_x, args.cal_y, args.verbose, args.positive, args.layer)
+    export_and_stitch(proj, out, args.scale, args.print, args.gap, args.copies, args.cal_x, args.cal_y, args.verbose, args.positive, args.layer)
