@@ -71,9 +71,9 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
     try:
         print(f"⏳ Exporting layers from {clean_project}...")
         if do_fcu:
-            run_kicad_cmd(["--layers", "F.Cu,Edge.Cuts", "--mirror"], temp_f)
+            run_kicad_cmd(["--layers", "F.Cu,Edge.Cuts,F.Mask", "--mirror"], temp_f)
         if do_bcu:
-            run_kicad_cmd(["--layers", "B.Cu,Edge.Cuts"], temp_b)
+            run_kicad_cmd(["--layers", "B.Cu,Edge.Cuts,B.Mask"], temp_b)
     except Exception as e:
         print(f"❌ KiCad Error: {e}")
         return
