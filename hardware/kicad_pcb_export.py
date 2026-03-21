@@ -22,7 +22,7 @@ def get_input_interactively(arg_value, description):
         arg_value += ".svg"
     return arg_value
 
-def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm, copies, cal_x, cal_y, verbose, positive, layer):
+def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm, copies, orient, cal_x, cal_y, verbose, positive, layer):
     cwd = os.getcwd()
     
     clean_project = project_name if project_name.endswith(".kicad_pcb") else f"{project_name}.kicad_pcb"
@@ -91,11 +91,17 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
     b_width = svg_bcu.width if svg_bcu else 0
     b_height = svg_bcu.height if svg_bcu else 0
 
-    # Vertical stack logic
-    OutputSVG_width_px = max(f_width, b_width)
-
-    v_gap_px = Vgap_px if do_fcu and do_bcu else 0
-    block_height_px = f_height + b_height + v_gap_px
+    # Block logic (a block is one instance of the board layers)
+    if orient == "h":
+        # Horizontal: Layers side-by-side
+        block_width_px = f_width + b_width + (Hgap_px if (do_fcu and do_bcu) else 0)
+        block_height_px = max(f_height, b_height)
+    else:
+        # Vertical: Layers stacked
+        block_width_px = max(f_width, b_width)
+        block_height_px = f_height + b_height + (Vgap_px if (do_fcu and do_bcu) else 0)
+    
+    OutputSVG_width_px = block_width_px
     
     total_height_px = (block_height_px * copies) + (Vgap_px * (copies - 1))
     OutputSVG_height_px = total_height_px + LabelVgap_px
@@ -124,13 +130,14 @@ def export_and_stitch(project_name, output_filename, scale, should_print, gap_mm
         
         if do_fcu:
             elem = sg.Element(svg_fcu.copy())
-            elem.move(0, sg.Unit(y_offset).to('mm').value)
+            elem.move(0, sg.Unit(y_offset).to('mm').value) # F.Cu is always top-left of the block
             OutputSVG__params.append(elem)
             
         if do_bcu:
             elem = sg.Element(svg_bcu.copy())
-            local_y = (f_height + v_gap_px) if do_fcu else 0
-            elem.move(0, sg.Unit(y_offset + local_y).to('mm').value)
+            local_x = (f_width + Hgap_px) if (do_fcu and orient == "h") else 0
+            local_y = (f_height + Vgap_px) if (do_fcu and orient == "v") else 0
+            elem.move(sg.Unit(local_x).to('mm').value, sg.Unit(y_offset + local_y).to('mm').value)
             OutputSVG__params.append(elem)
             
     if do_fcu or do_bcu: OutputSVG__params.append(svg_label)
@@ -161,6 +168,7 @@ if __name__ == "__main__":
     parser.add_argument("--gap",type=float,default=10)
     #parser.add_argument("--a4", action="store_true")
     parser.add_argument("--copies", type=int, default=1, help="Number of vertical copies")
+    parser.add_argument("--orient", choices=["v", "h"], default="v", help="Layer orientation: v=stacked, h=side-by-side")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--positive", action="store_true")
     parser.add_argument("--layer", type=str, default="F.Cu,B.Cu")
@@ -174,4 +182,4 @@ if __name__ == "__main__":
     proj = get_input_interactively(args.project, "Project Name (.kicad_pcb)")
     out = get_input_interactively(args.output, "Output Filename")
     
-    export_and_stitch(proj, out, args.scale, args.print, args.gap, args.copies, args.cal_x, args.cal_y, args.verbose, args.positive, args.layer)
+    export_and_stitch(proj, out, args.scale, args.print, args.gap, args.copies, args.orient, args.cal_x, args.cal_y, args.verbose, args.positive, args.layer)
