@@ -1,0 +1,26 @@
+# Review: main/main.c
+
+## Critical Issues
+
+### 1. Blocking debounce loops (lines 26, 37)
+The `while(gpio_get_level(...) == 0)` loops block the entire task. If a button is mechanically stuck, the task hangs forever. Use a tick-based timeout (e.g., max 500ms debounce).
+
+### 2. No error handling (lines 12-15)
+`store_init()` and `display_init()` return `esp_err_t`, but return values are never checked. A failed NVS init or display init leads to silent failures and crashes downstream.
+
+### 3. Thumbwheel rotation not handled
+`board_config.h` defines `PIN_TWT_DIR1` and `PIN_TWT_DIR2`, and `exposure.h` exposes `exposure_adjust()`, but there's no code in the loop that reads the direction pins or calls `adjust`. The thumbwheel only acts as a start/pause button.
+
+### 4. Empty UI rendering (line 42)
+The `display_lock()/unlock()` block contains only a comment. The display will never actually update.
+
+### 5. No handling of FINISHED/CANCELLED states
+After exposure finishes or is cancelled, the state transitions to `STATE_FINISHED` or `STATE_CANCELLED`. The thumbwheel check only handles `STATE_RUNNING` vs everything else, so pressing it will call `exposure_start()` from a finished/cancelled state without clearing state first. Should call `exposure_reset()` before `exposure_start()` in those cases.
+
+## Minor Issues
+
+### 6. No power management
+The 100ms `vTaskDelay` is fine, but there's no consideration of deep sleep or power management between exposures.
+
+### 7. `exposure_init()` return type is void
+Unlike the other inits, this cannot fail per the API. Worth confirming the implementation handles all error paths internally.
