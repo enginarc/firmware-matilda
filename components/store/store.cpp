@@ -36,7 +36,7 @@ void store_set_u32(const char* key, uint32_t value) {
 uint32_t store_get_duration() {
     nvs_handle_t handle;
     uint32_t val = 60; // Default 60s
-    if (nvs_open("storage", NVS_READONLY, &handle) == ESP_OK) {
+    if (nvs_open(NVS_NAMESPACE, NVS_READONLY, &handle) == ESP_OK) {
         nvs_get_u32(handle, "last-duration", &val);
         nvs_close(handle);
     }
@@ -45,7 +45,7 @@ uint32_t store_get_duration() {
 
 void store_set_duration(uint32_t val) {
     nvs_handle_t handle;
-    if (nvs_open("storage", NVS_READWRITE, &handle) == ESP_OK) {
+    if (nvs_open(NVS_NAMESPACE, NVS_READWRITE, &handle) == ESP_OK) {
         nvs_set_u32(handle, "last-duration", val);
         nvs_commit(handle);
         nvs_close(handle);
